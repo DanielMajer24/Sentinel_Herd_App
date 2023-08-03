@@ -37,7 +37,7 @@ def main():
     st.title('Number OCR App')
 
     # Load the models
-    reader, recognizer = init_models()
+    reader = init_models()
     if st.session_state['inspector'] == '':
         inspector = st.text_input("Enter the inspector name", "Enter the inspector name here...")
     else:
