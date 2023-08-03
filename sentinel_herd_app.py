@@ -78,7 +78,8 @@ def main():
 
         audio = audiorecorder("Click to record", "Recording...")
         if len(audio)>1:
-            with sr.AudioFile(audio) as source:
+            st.audio(audio, format='audio/wav')
+            with sr.AudioFile(audio.tobytes()) as source:
                 audio_data = recognizer.record(source)
 
             try:
