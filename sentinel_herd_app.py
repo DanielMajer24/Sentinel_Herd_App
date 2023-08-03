@@ -38,8 +38,8 @@ def main():
     date = st.date_input("Enter the date", value=None, min_value=None, max_value=None, key=None)
     
 
-    # uploaded_file = st.camera_input("Take a picture")
-    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    uploaded_file = st.camera_input("Take a picture")
+    # uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
