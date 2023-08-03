@@ -1,0 +1,5 @@
+streamlit==1.24.1
+transformers==4.27.1
+torch==2.0.0+cu117
+torchvision==0.15.1+cu117
+Pillow==9.2.0
