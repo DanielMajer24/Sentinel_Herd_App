@@ -5,7 +5,7 @@ from transformers import LayoutLMTokenizer
 import torch
 import torchvision.transforms as T
 
-@st.cache_resource
+@st.cache_resource(allow_output_mutation=True)
 def init_models():
     tokenizer = LayoutLMTokenizer.from_pretrained("microsoft/layoutlm-base-uncased")
     model = LayoutLMForTokenClassification.from_pretrained("microsoft/layoutlm-base-uncased")
