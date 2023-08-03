@@ -85,7 +85,7 @@ def main():
         # Convert the number to an integer if possible
         c1, c2, c3 = st.columns(3)
         with c2:
-            stt_button = Button(label="Speak", button_type='success', width=100)
+            stt_button = Button(label="Speak", button_type='success', width=50)
 
         stt_button.js_on_event("button_click", CustomJS(code="""
             var recognition = new webkitSpeechRecognition();
