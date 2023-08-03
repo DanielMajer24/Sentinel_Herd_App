@@ -13,7 +13,7 @@ from audiorecorder import audiorecorder
 
 import os
 import io
-import wave
+from pydub import AudioSegment
 
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
@@ -85,7 +85,18 @@ def main():
             audio_bytes = audio.tobytes()
             st.audio(audio_bytes)
 
-            st.write(audio_bytes[:4])
+            # st.write(audio_bytes[:4])
+            # Create a file-like object from the bytes
+            file_obj = io.BytesIO(audio_bytes)
+
+            # Read the audio file using pydub
+            audio_segment = AudioSegment.from_file(file_obj)
+
+            # Export to WAV format
+            wav_io = io.BytesIO()
+            audio_segment.export(wav_io, format='wav')
+            wav_io.seek(0)
+
             # file_obj = io.BytesIO(audio_bytes)
             
             # with wave.open(file_obj, 'rb') as wav_file:
@@ -94,18 +105,19 @@ def main():
             #     channels = wav_file.getnchannels()
             #     audio_data = wav_file.readframes(wav_file.getnframes())
 
-            # audio_data_object= sr.AudioData(audio_data, sample_rate, sample_width)
+            with sr.AudioFile(wav_io) as source:
+                audio_data_object = recognizer.record(source)
 
-            # try:
-            #     text = recognizer.recognize_google(audio_data_object)
-            #     comments = st.text_area('Animal Comments', text)
-            # except sr.UnknownValueError:
-            #     comments = st.text_area('Animal Comments', "Could not understand the audio!")
-            #     print("Could not understand the audio!")
-            # except sr.RequestError:
-            #     comments = st.text_area('Animal Comments', "Could not request results; check your network connection else type it in!")
-            #     print("Could not request results; check your network connection!")
-            comments = ""
+            try:
+                text = recognizer.recognize_google(audio_data_object)
+                comments = st.text_area('Animal Comments', text)
+            except sr.UnknownValueError:
+                comments = st.text_area('Animal Comments', "Could not understand the audio!")
+                print("Could not understand the audio!")
+            except sr.RequestError:
+                comments = st.text_area('Animal Comments', "Could not request results; check your network connection else type it in!")
+                print("Could not request results; check your network connection!")
+            # comments = ""
 
         with st.form(key='form_1'):
             try:

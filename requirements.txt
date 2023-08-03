@@ -8,4 +8,4 @@ Pillow==9.2.0
 easyocr==1.7.0
 streamlit-audiorecorder==0.0.2
 SpeechRecognition==3.10.0
-wave==0.0.2
+pydub==0.25.1
