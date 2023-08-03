@@ -39,7 +39,7 @@ def main():
     # Load the models
     reader = init_models()
     if st.session_state['inspector'] == '':
-        inspector = st.text_input("Enter the inspector name", "Enter the inspector name here...")
+        inspector = st.text_input("Enter the inspector name")
     else:
         inspector = st.session_state['inspector']
 
@@ -83,8 +83,9 @@ def main():
         st.write(f"Detected Number: {number}")
 
         # Convert the number to an integer if possible
-
-        stt_button = Button(label="Speak", width=100)
+        c1, c2, c3 = st.columns(3)
+        with c2:
+            stt_button = Button(label="Speak", button_type='success', width=100)
 
         stt_button.js_on_event("button_click", CustomJS(code="""
             var recognition = new webkitSpeechRecognition();
