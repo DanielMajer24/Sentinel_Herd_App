@@ -79,7 +79,7 @@ def main():
         audio = audiorecorder("Click to record", "Recording...")
         if len(audio)>1:
             audio_bytes = audio.tobytes()
-            st.audio(audio, format='audio/ogg')
+            st.audio(audio_bytes)
             audio_data= sr.AudioData(audio_bytes, sample_rate=16000, sample_width=2, channels=1)
 
             try:
