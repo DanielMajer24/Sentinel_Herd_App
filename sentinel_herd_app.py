@@ -78,9 +78,9 @@ def main():
 
         audio = audiorecorder("Click to record", "Recording...")
         if len(audio)>1:
-            st.audio(audio, format='audio/wav')
-            with sr.AudioFile(audio.tobytes()) as source:
-                audio_data = recognizer.record(source)
+            audio_bytes = audio.tobytes()
+            st.audio(audio, format='audio/ogg')
+            audio_data= sr.AudioData(audio_bytes, sample_rate=16000, sample_width=2, channels=1)
 
             try:
                 text = recognizer.recognize_google(audio_data)
