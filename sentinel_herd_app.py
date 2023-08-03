@@ -85,7 +85,7 @@ def main():
         # Convert the number to an integer if possible
         c1, c2, c3 = st.columns(3)
         with c2:
-            stt_button = Button(label="Speak", button_type='success', width=50)
+            stt_button = Button(label="Describe Animal", button_type='success', width=50)
 
         stt_button.js_on_event("button_click", CustomJS(code="""
             var recognition = new webkitSpeechRecognition();
@@ -113,7 +113,8 @@ def main():
             refresh_on_update=False,
             override_height=75,
             debounce_time=0)
-
+        
+        
         if result:
             if "GET_TEXT" in result:
 
@@ -123,7 +124,8 @@ def main():
                 except Exception as e:
                     comments = st.text_area('Animal Comments', "Could not understand the audio!")
                     print("Could not understand the audio!")
-            # comments = ""
+        else:
+            comments = st.text_area('Animal Comments', "No comments recorded yet.")
 
         with st.form(key='form_1'):
             try:
