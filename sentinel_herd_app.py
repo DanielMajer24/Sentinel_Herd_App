@@ -85,25 +85,27 @@ def main():
             audio_bytes = audio.tobytes()
             st.audio(audio_bytes)
 
-            file_obj = io.BytesIO(audio_bytes)
+            st.write(audio_bytes[:4])
+            # file_obj = io.BytesIO(audio_bytes)
             
-            with wave.open(file_obj, 'rb') as wav_file:
-                sample_rate = wav_file.getframerate()
-                sample_width = wav_file.getsampwidth()
-                channels = wav_file.getnchannels()
-                audio_data = wav_file.readframes(wav_file.getnframes())
+            # with wave.open(file_obj, 'rb') as wav_file:
+            #     sample_rate = wav_file.getframerate()
+            #     sample_width = wav_file.getsampwidth()
+            #     channels = wav_file.getnchannels()
+            #     audio_data = wav_file.readframes(wav_file.getnframes())
 
-            audio_data_object= sr.AudioData(audio_data, sample_rate, sample_width)
+            # audio_data_object= sr.AudioData(audio_data, sample_rate, sample_width)
 
-            try:
-                text = recognizer.recognize_google(audio_data_object)
-                comments = st.text_area('Animal Comments', text)
-            except sr.UnknownValueError:
-                comments = st.text_area('Animal Comments', "Could not understand the audio!")
-                print("Could not understand the audio!")
-            except sr.RequestError:
-                comments = st.text_area('Animal Comments', "Could not request results; check your network connection else type it in!")
-                print("Could not request results; check your network connection!")
+            # try:
+            #     text = recognizer.recognize_google(audio_data_object)
+            #     comments = st.text_area('Animal Comments', text)
+            # except sr.UnknownValueError:
+            #     comments = st.text_area('Animal Comments', "Could not understand the audio!")
+            #     print("Could not understand the audio!")
+            # except sr.RequestError:
+            #     comments = st.text_area('Animal Comments', "Could not request results; check your network connection else type it in!")
+            #     print("Could not request results; check your network connection!")
+            comments = ""
 
         with st.form(key='form_1'):
             try:
