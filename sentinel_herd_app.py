@@ -34,7 +34,7 @@ def main():
     
     st.session_state['inspector'] = ''
 
-    st.title('Number OCR App')
+    st.title('Senitnel Herd OCR and Dictation App')
 
     # Load the models
     reader = init_models()
