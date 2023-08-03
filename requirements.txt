@@ -1,9 +1,9 @@
 streamlit==1.24.1
-transformers==4.27.1
---find-links https://download.pytorch.org/whl/torch_stable.html
-torch==2.0.0+cu117
---find-links https://download.pytorch.org/whl/torch_stable.html
-torchvision==0.15.1+cu117
+# transformers==4.27.1
+# --find-links https://download.pytorch.org/whl/torch_stable.html
+# torch==2.0.0+cu117
+# --find-links https://download.pytorch.org/whl/torch_stable.html
+# torchvision==0.15.1+cu117
 Pillow==9.2.0
 easyocr==1.7.0
 streamlit-audiorecorder==0.0.2
