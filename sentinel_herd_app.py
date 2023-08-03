@@ -4,16 +4,20 @@ from PIL import Image
 # from transformers import LayoutLMTokenizer
 # import torch
 # import torchvision.transforms as T
-import speech_recognition as sr
+# import speech_recognition as sr
 
 import easyocr as ocr
 import numpy as np
 
-from audiorecorder import audiorecorder
+# from audiorecorder import audiorecorder
 
 import os
 import io
-from pydub import AudioSegment
+# from pydub import AudioSegment
+from bokeh.models.widgets import Button
+from bokeh.models import CustomJS
+from streamlit_bokeh_events import streamlit_bokeh_events
+
 
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
@@ -21,10 +25,10 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 @st.cache_resource
 def init_models():
     reader = ocr.Reader(['en'], gpu=False, model_storage_directory='.')
-    recognizer = sr.Recognizer()
+    # recognizer = sr.Recognizer()
     # tokenizer = LayoutLMTokenizer.from_pretrained("microsoft/layoutlm-base-uncased")
     # model = LayoutLMForTokenClassification.from_pretrained("microsoft/layoutlm-base-uncased")
-    return reader, recognizer #tokenizer, model
+    return reader#, recognizer #tokenizer, model
 
 def main():
     
@@ -80,43 +84,44 @@ def main():
 
         # Convert the number to an integer if possible
 
-        audio = audiorecorder("Click to record", "Recording...")
-        if len(audio)>1:
-            audio_bytes = audio.tobytes()
-            st.audio(audio_bytes)
+        stt_button = Button(label="Speak", width=100)
 
-            # st.write(audio_bytes[:4])
-            # Create a file-like object from the bytes
-            file_obj = io.BytesIO(audio_bytes)
+        stt_button.js_on_event("button_click", CustomJS(code="""
+            var recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+        
+            recognition.onresult = function (e) {
+                var value = "";
+                for (var i = e.resultIndex; i < e.results.length; ++i) {
+                    if (e.results[i].isFinal) {
+                        value += e.results[i][0].transcript;
+                    }
+                }
+                if ( value != "") {
+                    document.dispatchEvent(new CustomEvent("GET_TEXT", {detail: value}));
+                }
+            }
+            recognition.start();
+            """))
 
-            # Read the audio file using pydub
-            audio_segment = AudioSegment.from_file(file_obj)
+        result = streamlit_bokeh_events(
+            stt_button,
+            events="GET_TEXT",
+            key="listen",
+            refresh_on_update=False,
+            override_height=75,
+            debounce_time=0)
 
-            # Export to WAV format
-            wav_io = io.BytesIO()
-            audio_segment.export(wav_io, format='wav')
-            wav_io.seek(0)
+        if result:
+            if "GET_TEXT" in result:
 
-            # file_obj = io.BytesIO(audio_bytes)
-            
-            # with wave.open(file_obj, 'rb') as wav_file:
-            #     sample_rate = wav_file.getframerate()
-            #     sample_width = wav_file.getsampwidth()
-            #     channels = wav_file.getnchannels()
-            #     audio_data = wav_file.readframes(wav_file.getnframes())
-
-            with sr.AudioFile(wav_io) as source:
-                audio_data_object = recognizer.record(source)
-
-            try:
-                text = recognizer.recognize_google(audio_data_object)
-                comments = st.text_area('Animal Comments', text)
-            except sr.UnknownValueError:
-                comments = st.text_area('Animal Comments', "Could not understand the audio!")
-                print("Could not understand the audio!")
-            except sr.RequestError:
-                comments = st.text_area('Animal Comments', "Could not request results; check your network connection else type it in!")
-                print("Could not request results; check your network connection!")
+                try:
+                    text = result.get("GET_TEXT")
+                    comments = st.text_area('Animal Comments', text)
+                except Exception as e:
+                    comments = st.text_area('Animal Comments', "Could not understand the audio!")
+                    print("Could not understand the audio!")
             # comments = ""
 
         with st.form(key='form_1'):

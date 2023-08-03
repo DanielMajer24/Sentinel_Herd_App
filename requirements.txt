@@ -6,6 +6,7 @@ streamlit==1.24.1
 # torchvision==0.15.1+cu117
 Pillow==9.2.0
 easyocr==1.7.0
-streamlit-audiorecorder==0.0.2
-SpeechRecognition==3.10.0
-pydub==0.25.1
+# streamlit-audiorecorder==0.0.2
+# SpeechRecognition==3.10.0
+bokeh==2.4.3
+streamlit_bokeh_events==0.1.2
