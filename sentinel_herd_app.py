@@ -12,6 +12,10 @@ import numpy as np
 from audiorecorder import audiorecorder
 
 import os
+import io
+import wave
+
+
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 @st.cache_resource
@@ -80,10 +84,19 @@ def main():
         if len(audio)>1:
             audio_bytes = audio.tobytes()
             st.audio(audio_bytes)
-            audio_data= sr.AudioData(audio_bytes, sample_rate=16000, sample_width=2, channels=1)
+
+            file_obj = io.BytesIO(audio_bytes)
+            
+            with wave.open(file_obj, 'rb') as wav_file:
+                sample_rate = wav_file.getframerate()
+                sample_width = wav_file.getsampwidth()
+                channels = wav_file.getnchannels()
+                audio_data = wav_file.readframes(wav_file.getnframes())
+
+            audio_data_object= sr.AudioData(audio_data, sample_rate, sample_width)
 
             try:
-                text = recognizer.recognize_google(audio_data)
+                text = recognizer.recognize_google(audio_data_object)
                 comments = st.text_area('Animal Comments', text)
             except sr.UnknownValueError:
                 comments = st.text_area('Animal Comments', "Could not understand the audio!")
