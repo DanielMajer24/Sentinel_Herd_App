@@ -6,3 +6,5 @@ torch==2.0.0+cu117
 torchvision==0.15.1+cu117
 Pillow==9.2.0
 easyocr==1.7.0
+streamlit-audiorecorder==0.0.2
+SpeechRecognition==3.10.0
